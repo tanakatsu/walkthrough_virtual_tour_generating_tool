@@ -1,0 +1,125 @@
+<krpano>
+
+  <events name="walkable_events" keep="true" onkeydown="onKeyDown();" onviewchanged="updateUI();" />
+	
+  <action name="onKeyDown">
+    trace('keycode=', get(keycode));
+		
+    <!-- j -->
+    if (keycode == '74',
+      js("walkable.moveForward(get(view.hlookat));");
+    );
+		
+    <!-- k -->
+    if (keycode == '75',
+      js("walkable.moveBackward(get(view.hlookat));");
+    );
+
+    <!-- h -->
+    if (keycode == '72',
+      js("walkable.moveLeft(get(view.hlookat));");
+    );
+		
+    <!-- l -->
+    if (keycode == '76',
+      js("walkable.moveRight(get(view.hlookat));");
+    );
+  </action>
+
+  <action name="updateUI">
+    trace('scene=', get(xml.scene), ' hlookat=', get(view.hlookat));
+
+    if(prev_hlookat === null,
+      set(prev_hlookat, 0);
+    );
+    if(last_scene === null,
+      set(last_scene, get(xml.scene));
+    );
+
+    if (last_scene !== xml.scene,
+      js(walkable.onViewChanged(get(view.hlookat)););
+      copy(last_scene, xml.scene);
+      ,
+      set(cur_hlookat, get(view.hlookat));
+      sub(d_hlookat, cur_hlookat, prev_hlookat);
+      Math.abs(d_hlookat);
+
+      if(d_hlookat GT 1,
+        js(walkable.onViewChanged(get(view.hlookat)););
+        copy(prev_hlookat, view.hlookat);
+      );
+    );
+
+    <!--
+    if(prev_hlookat === null,
+      set(prev_hlookat, 0);
+      ,
+      set(cur_hlookat, get(view.hlookat));
+      sub(d_hlookat, cur_hlookat, prev_hlookat);
+      Math.abs(d_hlookat);
+
+      if(d_hlookat GT 1,
+        js(walkable.onViewChanged(get(view.hlookat)););
+        copy(prev_hlookat, view.hlookat);
+      );
+    );
+    -->
+  </action>
+
+  <action name="showArrows">
+    set(plugin['front'].alpha, 0.5);
+    set(plugin['back'].alpha, 0.5);
+    set(plugin['right'].alpha, 0.5);
+    set(plugin['left'].alpha, 0.5);
+  </action>
+
+  <action name="hideArrows">
+    set(plugin['front'].alpha, 0.0);
+    set(plugin['back'].alpha, 0.0);
+    set(plugin['right'].alpha, 0.0);
+    set(plugin['left'].alpha, 0.0);
+  </action>
+
+  <action name="loadJson">
+    js("walkable.loadJson();");
+  </action>
+
+  <action name="moveForward">
+    js("walkable.moveForward(get(view.hlookat));");
+  </action>
+
+  <action name="moveBackward">
+    js("walkable.moveBackward(get(view.hlookat));");
+  </action>
+
+  <action name="moveRight">
+    js("walkable.moveRight(get(view.hlookat));");
+  </action>
+
+  <action name="moveLeft">
+    js("walkable.moveLeft(get(view.hlookat));");
+  </action>
+
+  <action name="loadNextScene">
+    trace('load next scene=', %1, ' hlookat=', %2);
+
+    set(nextview, '');
+    if(%2 === null, 
+      txtadd(nextview, 'view.hlookat=', get(view.hlookat), '&amp;');
+      ,
+      txtadd(nextview, 'view.hlookat=', %2, '&amp;');
+    );
+    txtadd(nextview, 'view.vlookat=');
+    txtadd(nextview, get(view.vlookat));
+    txtadd(nextview, '&amp;');
+    txtadd(nextview, 'view.fov=');
+    txtadd(nextview, get(view.fov));
+    trace(get(nextview));
+    loadscene(%1, get(nextview), MERGE);
+  </action>
+
+  <plugin name="front" keep="true" url="arrow.png" scale="0.2" alpha="0.5" align="top" edge="center" rotate="-90" onloaded="set(y, get(stageheight));div(y, 4);" dx="0" dy="0" onclick="moveForward();" />
+  <plugin name="back" keep="true" url="arrow.png" scale="0.2" alpha="0.5" align="bottom" edge="center" rotate="90" onloaded="set(y, get(stageheight));div(y, 4);" dx="0" dy="0" onclick="moveBackward();" />
+  <plugin name="right" keep="true" url="arrow.png" scale="0.2" alpha="0.5" align="right" edge="center" rotate="0" onloaded="set(x, get(stagewidth));div(x, 4);" dx="0" dy="0" onclick="moveRight();" />
+  <plugin name="left" keep="true" url="arrow.png" scale="0.2" alpha="0.5" align="left" edge="center" rotate="180" onloaded="set(x, get(stagewidth));div(x, 4);" dx="0" dy="0" onclick="moveLeft();" />
+</krpano>
