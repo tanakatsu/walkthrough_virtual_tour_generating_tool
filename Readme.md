@@ -39,7 +39,7 @@ Directory structure should be like this.
 
 You have to write a route description file.
 
-Sample file is like this.
+Sample configuration is as below.
 
 ```
 [
@@ -54,10 +54,17 @@ Sample file is like this.
 ]  
 ```
 
+Note:
+
+- Connecting paths should belong to same zone. 
+- Timestamp(ts) must be integer.
+
 ### Adjust parameters
 
-Edit `config.json` to set initial viewing direction. 
-You may need several times trials to do right.
+Edit `config.json` to set initial viewing direction.
+You may also need to edit `housemap.rb`.
+ 
+Several times trials may be needed to do right.
 
 ### Generate content
 
