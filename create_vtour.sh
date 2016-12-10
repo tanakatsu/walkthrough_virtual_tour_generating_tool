@@ -34,6 +34,11 @@ ruby create_map.rb -o data.json --framerate $framerate --unstage
 exit_on_error
 echo 'finished.'
 
+if [ -e ${output_dir}/vtour/tour.xml ]; then
+  rm ${output_dir}/vtour/tour.xml
+  exit_on_error
+fi
+
 echo 'creating virtual tour...'
 ./${krpanotools_dir}/krpanotools makepano -config=${krpanotools_dir}/templates/vtour-normal.config ${output_dir}/*.jpg
 exit_on_error
