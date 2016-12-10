@@ -43,14 +43,17 @@ class Housemap
         id += 1
       else
         prev_pos = @route[i - 1]
-        (prev_pos['ts'] + 1..pos['ts']).step(1).each_with_index do |ts, j|
+        from = prev_pos['ts'].to_i + 1
+        to = pos['ts'].to_i
+        delta = 1.0 / @framerate
+        (from..to).step(delta).each_with_index do |ts, j|
           p = {}
           p['id'] = id
           p['ts'] = ts
-          p['x'] = interpolate(prev_pos['x'], pos['x'], pos['ts'] - prev_pos['ts'], j + 1)
-          p['y'] = interpolate(prev_pos['y'], pos['y'], pos['ts'] - prev_pos['ts'], j + 1)
+          p['x'] = interpolate(prev_pos['x'], pos['x'], pos['ts'] - prev_pos['ts'], (j + 1) * delta)
+          p['y'] = interpolate(prev_pos['y'], pos['y'], pos['ts'] - prev_pos['ts'], (j + 1) * delta)
           p['zone'] = pos['zone']
-          scene_name = zeropadding(ts * @framerate + @frame_offset, 4)
+          scene_name = zeropadding((ts * @framerate).round + @frame_offset, 4)
           p['scene'] = "scene_#{scene_name}"
 
           neighbors = find_nearest_neighbors(p, @space_resolution) & find_same_zone_points(p)
